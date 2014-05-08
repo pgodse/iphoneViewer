@@ -15,6 +15,7 @@
 #include <osgAnimation/MorphGeometry>
 #include <osgDB/FileUtils>
 #include <osgUtil/SmoothingVisitor>
+#include <osg/LineWidth>
 
 #import <UIKit/UIKit.h>
 

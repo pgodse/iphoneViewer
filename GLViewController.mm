@@ -191,7 +191,6 @@ osg::ref_ptr<osg::Geometry> getShape(osg::Node *shape) {
     osg::StateSet *stateset = textGeode->getOrCreateStateSet();
     stateset->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
     
-    
     //Create morph animation
     osgAnimation::Animation *animation = new osgAnimation::Animation();
     osgAnimation::FloatLinearChannel *channel0 = new osgAnimation::FloatLinearChannel;
@@ -232,6 +231,13 @@ osg::ref_ptr<osg::Geometry> getShape(osg::Node *shape) {
     text->setText("Hello Humans!");
     textGeode->addDrawable(text);
     
+    // Add Line
+    osg::Geode *lineGeode = new osg::Geode;
+    lineGeode->addDrawable(createLine());
+    osg::LineWidth *width = new osg::LineWidth;
+    width->setWidth(5.0f);
+    lineGeode->getOrCreateStateSet()->setAttributeAndModes(width);
+    _sceneRoot->addChild(lineGeode);
     
     //Group the boxes
     osg::ref_ptr<osg::Group> boxGroup = new osg::Group();
@@ -368,6 +374,24 @@ osg::Geometry* createTargetGeometry()
     
     osgUtil::SmoothingVisitor smv;
     smv.smooth( *geom );
+    return geom.release();
+}
+
+osg::Geometry* createLine() {
+    osg::ref_ptr<osg::Vec3Array> lineVertex = new osg::Vec3Array;
+    lineVertex->push_back( osg::Vec3(0.0, 5.0, 1.0));
+    lineVertex->push_back( osg::Vec3(5.0, 0.0, 5.0));
+    lineVertex->push_back( osg::Vec3(5.0, 4.0, 5.0));
+    
+    osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
+    geom->setVertexArray(lineVertex.get());
+    geom->addPrimitiveSet( new osg::DrawArrays(osg::PrimitiveSet::LINES, 0, 2));
+    
+    osg::Vec4Array* colors = new osg::Vec4Array;
+    colors->push_back(osg::Vec4(1.0f,1.0f,0.0f,1.0f));
+    geom->setColorArray(colors);
+    geom->setColorBinding(osg::Geometry::BIND_OVERALL);
+    
     return geom.release();
 }
 
